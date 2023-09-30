@@ -23,4 +23,5 @@ public record DatosRegistroPaciente(
         @NotNull
         @Valid
         DatosDireccion direccion) {
+
 }

@@ -6,8 +6,11 @@ import med.voll.api.domain.paciente.ListadoPaciente;
 import med.voll.api.domain.paciente.Paciente;
 import med.voll.api.domain.paciente.PacienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -17,9 +20,10 @@ public class PacienteController {
     private PacienteRepository pacienteRepository;
 
     @PostMapping
-    public void registrarPaciente(@RequestBody @Valid DatosRegistroPaciente datosRegistroPaciente){
-        pacienteRepository.save(new Paciente(datosRegistroPaciente));
-
+    public ResponseEntity<DatosRegistroPaciente> registrarPaciente(@RequestBody @Valid DatosRegistroPaciente datosRegistroPaciente, UriComponentsBuilder uriComponentsBuilder){
+        Paciente paciente = pacienteRepository.save(new Paciente(datosRegistroPaciente));
+        URI url= uriComponentsBuilder.path("/pacientes/{id}").buildAndExpand(paciente.getId()).toUri();
+        return ResponseEntity.created(url).body(datosRegistroPaciente);
     }
 
     @GetMapping
